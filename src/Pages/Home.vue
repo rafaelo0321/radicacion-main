@@ -23,14 +23,12 @@
               Simplifica tus procesos y ahorra tiempo.
             </p>
             <div class="mt-10 flex items-center justify-center lg:justify-start gap-x-6">
-              <a
-                href="/print"
+              <RouterLink to="/print" 
                 class="rounded-md bg-blue-600 px-5 py-3 text-lg font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                >Empezar a Radicar</a
-              >
-              <a href="/stamp" class="text-lg font-semibold leading-6text-gray-900"
-                >Generar Sello <span aria-hidden="true">→</span></a
-              >
+                >Empezar a Radicar</RouterLink>
+
+               <RouterLink to="/stamp" class="text-lg font-semibold leading-6text-gray-900"
+                >Generar Sello <span aria-hidden="true">→</span></RouterLink>
             </div>
           </div>
           <div class="lg:w-2/5 lg:ml-10 mt-8 lg:mt-0">
@@ -56,6 +54,7 @@
 import { defineComponent } from 'vue';
 import Header from '../components/Layout/Header.vue';
 import Footer from '../components/Layout/Footer.vue';
+import { RouterLink } from 'vue-router';
 
 export default defineComponent({
   components: {
