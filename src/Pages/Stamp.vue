@@ -7,58 +7,38 @@
           <div class="bg-white p-6 rounded-lg shadow-lg">
             <form @submit.prevent="handlePrint">
               <div class="mb-4">
-                <label for="radicado" class="block text-gray-700 font-bold mb-2">Radicado</label>
+                <label for="nombreEmpresa" class="block text-gray-700 font-bold mb-2">Empresa</label>
                 <input
                   type="text"
                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="radicado"
-                  v-model="formData.radicado"
+                  id="nombreEmpresa"
+                  v-model="formData.nombreEmpresa"
                   @input="handleInputChange"
                 />
               </div>
 
               <div class="mb-4">
-                <label for="name" class="block text-gray-700 font-bold mb-2">Empresa</label>
+                <label for="folio" class="block text-gray-700 font-bold mb-2">folio</label>
                 <input
-                  type="text"
                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="name"
-                  v-model="formData.name"
+                  id="folio"
+                  v-model="formData.folio"
                   @input="handleInputChange"
                 />
               </div>
               <div class="mb-4">
-                <label for="fechaHora" class="block text-gray-700 font-bold mb-2">Fecha y Hora</label>
-                <input
-                  type="datetime-local"
-                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="fechaHora"
-                  v-model="formData.fechaHora"
-                  @input="handleInputChange"
-                />
-              </div>
-              <div class="mb-4">
-                <label for="Folio" class="block text-gray-700 font-bold mb-2">Folio</label>
+                <label for="anexo" class="block text-gray-700 font-bold mb-2">Anexo</label>
                 <input
                   class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="Folio"
-                  v-model="formData.Folio"
-                  @input="handleInputChange"
-                />
-              </div>
-              <div class="mb-4">
-                <label for="Anexo" class="block text-gray-700 font-bold mb-2">Anexo</label>
-                <input
-                  class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  id="Anexo"
-                  v-model="formData.Anexo"
+                  id="anexo"
+                  v-model="formData.anexo"
                   @input="handleInputChange"
                 />
               </div>
               <div class="mb-4">
                 <label for="Dependencia" class="block text-gray-700 font-bold mb-2">Dependencia</label>
                 <v-select
-                  v-model="selectedOption"
+                  v-model="formData.dependencia"
                   :options="options"
                   label="label"
                   @input="handleSelectChange"
@@ -66,17 +46,23 @@
                   class="w-full"
                   searchable
                 />
-                <p class="mt-2 text-gray-600">Opción Seleccionada: {{ selectedOption ? selectedOption.label : 'Ninguno' }}</p>
+                
+                <p class="mt-2 text-gray-600">Opción Seleccionada: {{ formData.dependencia }}</p>
               </div>
 
               <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Imprimir
               </button>
+              <RouterLink
+              to="/"
+              class="bg-blue-500 p-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Regresar</RouterLink>
             </form>
           </div>
         </div>
       </div>
     </div>
+
     <div class="print-template fixed top-10 right-10 border-2 border-black  max-w-full mx-auto mt-5 bg-white flex items-center justify-center">
       <div class="logo-container mr-3 p-3 h-full">
         <img
@@ -87,13 +73,17 @@
       </div>
       <div class="flex-1 overflow-hidden text-center">
         <h2 class="mb-2 text-3xl font-bold">{{ formData.radicado }}</h2>
-        <p class="mb-1 text-sm font-bold">{{ formatFechaHora(formData.fechaHora) }}</p>
-        <p class="mb-1 text-base font-bold">{{ formData.name }}</p>
+        <p class="mb-1 text-sm font-bold">{{ formatFechaHora() }}</p>
+        <p class="mb-1 text-base font-bold">{{ formData.nombreEmpresa }}</p>
         <p class="mb-1 text-base font-bold">{{ formData.user }}</p>
-        <p class="mb-1 text-xs font-bold">Dep: {{ selectedOption ? selectedOption.label : 'Ninguno' }}</p>
-        <p class="mb-1 text-xs font-bold">Folio: {{ formData.Folio }} Anexo: {{ formData.Anexo }}</p>
+        <p class="mb-1 text-xs font-bold texto-corto">Dep: {{ formData.dependencia.toLowerCase() }}</p>
+        <p class="mb-1 text-xs font-bold">Folio: {{ formData.folio }} Anexo: {{ formData.anexo }}</p>
         <p class="mb-1 text-xs font-bold">Usuario: PRESENCIAL</p>
       </div>
+    </div>
+    <div>
+      
+      {{ formData }}
     </div>
     <Footer class="Footer"/>
   </div>
@@ -102,10 +92,12 @@
 <script>
 import Header from '../components/Layout/Header.vue';
 import Footer from '../components/Layout/Footer.vue';
+import axios from 'axios';
 import moment from 'moment-timezone';
 import 'moment/locale/es';
 import VSelect from 'vue3-select';
 import 'vue3-select/dist/vue3-select.css';
+import { RouterLink } from 'vue-router';
 
 export default {
   components: {
@@ -117,53 +109,25 @@ export default {
     return {
       formData: {
         funcionario: '',
-        radicado: '',
         user: '',
-        name: '',
+        nombreEmpresa: '',
         Asunto: '',
         Descripcion: '',
-        Folio: '',
-        Anexo: '',
+        folio: 0,
+        anexo: 0,
         dependencia: '',
-        fechaHora: '',
         tipoUsuario: '',
       },
       tableData: [],
       selectedOption: null,
       currentDateTimeString: '',
-      options : [
-        { value: "DESPACHO SUPERINTENDENTE DE VIGILANCIA Y SEGURIDAD PRIVADA", label: "DESPACHO SUPERINTENDENTE DE VIGILANCIA Y SEGURIDAD PRIVADA" },
-        { value: "OFICINA DE COMUNICACIONES", label: "OFICINA DE COMUNICACIONES" },
-        { value: "GRUPO DE ASESORIA Y CORDINACION INTERINSTITUCIONAL", label: "GRUPO DE ASESORIA Y CORDINACION INTERINSTITUCIONAL" },
-        { value: "OFICINA ASESORA DE PLANEACION", label: "OFICINA ASESORA DE PLANEACION" },
-        { value: "GRUPO DE ESQUEMAS DE AUTOPROTECCIÓN", label: "GRUPO DE ESQUEMAS DE AUTOPROTECCIÓN" },
-        { value: "GRUPO DE MECI Y CALIDAD", label: "GRUPO DE MECI Y CALIDAD" },
-        { value: "OFICINA ASESORA JURÍDICA", label: "OFICINA ASESORA JURÍDICA" },
-        { value: "GRUPO DE COBRO COACTIVO", label: "GRUPO DE COBRO COACTIVO" },
-        { value: "GRUPO DE RESPUESTA A DERECHOS DE PETICIÓN", label: "GRUPO DE RESPUESTA A DERECHOS DE PETICIÓN" },
-        { value: "OFICINA DE SISTEMAS", label: "OFICINA DE SISTEMAS" },
-        { value: "SUPERINTENDENCIA DELEGADA PARA LA OPERACIÓN", label: "SUPERINTENDENCIA DELEGADA PARA LA OPERACIÓN" },
-        { value: "GRUPO DE CONSULTORÍA CAPACITACIÓN", label: "GRUPO DE CONSULTORÍA CAPACITACIÓN" },
-        { value: "GRUPO DE PERMISOS DE ESTADOS EMPRESARIALES", label: "GRUPO DE PERMISOS DE ESTADOS EMPRESARIALES" },
-        { value: "DESPACHO SUPERINTENDENTE DELGADO PARA EL CONTROL", label: "DESPACHO SUPERINTENDENTE DELGADO PARA EL CONTROL" },
-        { value: "GRUPO DE QUEJAS", label: "GRUPO DE QUEJAS" },
-        { value: "GRUPO DE INSPECCIÓN", label: "GRUPO DE INSPECCIÓN" },
-        { value: "GRUPO DE SANCIONES", label: "GRUPO DE SANCIONES" },
-        { value: "SECRETARÍA GENERAL", label: "SECRETARÍA GENERAL" },
-        { value: "GRUPO DE ATENCIÓN AL USUARIO", label: "GRUPO DE ATENCIÓN AL USUARIO" },
-        { value: "GRUPO CONTROL INTERNO DISCIPLINARIO", label: "GRUPO CONTROL INTERNO DISCIPLINARIO" },
-        { value: "GRUPO CONTROL INTERNO", label: "  GRUPO CONTROL INTERNO" },
-        { value: "GRUPO DE GESTIÓN DOCUMENTAL ARCHIVO Y CORRESPONDENCIA", label: "GRUPO DE GESTIÓN DOCUMENTAL ARCHIVO Y CORRESPONDENCIA" },
-        { value: "GRUPO DE RECURSOS FINANCIEROS", label: "GRUPO DE RECURSOS FINANCIEROS" },
-        { value: "GRUPO DE RECURSOS FÍSICOS Y ADQUISICIONES", label: "GRUPO DE RECURSOS FÍSICOS Y ADQUISICIONES" },
-        { value: "GRUPO DE RECURSOS HUMANOS", label: "GRUPO DE RECURSOS HUMANOS" },
-        { value: "GRUPO DE CONTRATOS", label: "GRUPO DE CONTRATOS" }
-      ],
+      options : [],
     };
   },
   mounted() {
     this.getCurrentDateTimeString();
     this.loadFormData();
+    this.fetchDependencias();
   },
   methods: {
     loadFormData() {
@@ -183,8 +147,8 @@ export default {
       this.formData[id] = value.toUpperCase();
       localStorage.setItem('formData', JSON.stringify(this.formData));
     },
-    formatFechaHora(fechaHora) {
-      const date = new Date(fechaHora);
+    formatFechaHora() {
+      const date = new Date();
       return date.toLocaleString();
     },
     handleSelectChange(selectedOption) {
@@ -197,21 +161,35 @@ export default {
     resetForm() {
       this.formData = {
         funcionario: '',
-        radicado: '',
         user: '',
-        name: '',
+        nombreEmpresa: '',
         Asunto: '',
         Descripcion: '',
-        Folio: '',
-        Anexo: '',
+        folio: '',
+        anexo: '',
         dependencia: '',
-        fechaHora: '',
         tipoUsuario: '',
       };
       this.selectedOption = null;
       localStorage.removeItem('formData');
-    }
-  },
+    },
+    regresar(){
+      return this.$router.push("/")
+    },
+    async fetchDependencias() {
+      let uri = import.meta.env.VITE_URL_BASE;
+        try {
+          const response = await axios.get(uri+'dependencia/todos');
+          const d = response.data;
+          this.options = d.map(e=>{
+            return e.nombre
+          });
+          console.log(this.options);
+        } catch (error) {
+          console.error("Error fetching dependencies:", error);
+        }
+      },
+  }
 };
 </script>
 
@@ -231,7 +209,9 @@ body {
   margin: 0 auto;
   padding: 20px;
 }
-
+.p-2{
+  margin-left: 56%;
+}
 .card {
   margin-bottom: 30px;
 }
@@ -277,6 +257,9 @@ body {
   }
   .print-template {
     @apply ml-4; /* Ajusta el margen izquierdo aquí */
+  }
+  .texto-corto{
+    font-size: 0.5rem !important;
   }
 }
 </style>
