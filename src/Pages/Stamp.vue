@@ -231,7 +231,9 @@ body {
 .h-16 {
   height: 8rem;
 }
-
+.texto-corto{
+    font-size: 0.5rem !important;
+  }
 @media print {
   body {
     margin: 0;
@@ -256,10 +258,9 @@ body {
     height: 160px;
   }
   .print-template {
-    @apply ml-4; /* Ajusta el margen izquierdo aquí */
+    @apply ml-4;
   }
-  .texto-corto{
-    font-size: 0.5rem !important;
-  }
+  
 }
+
 </style>
