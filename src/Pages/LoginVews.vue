@@ -1,21 +1,41 @@
 <template>
-    <div class="login-container">
-        <form @submit.prevent="handleLogin">
-            <label for="nombre">Nombre:</label>
-            <input type="text" id="nombre" v-model="credentials.nombre" required />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <h2 class="text-center text-dark mt-5">Formulario de Inico de sección</h2>
+                <div class="text-center mb-5 text-dark">Favor ingrese los datos de inicio</div>
+                <div class="card my-5">
 
-            <label for="clave">Clave:</label>
-            <input type="password" id="clave" v-model="credentials.clave" required />
+                    <form class="card-body cardbody-color p-lg-5" @submit.prevent="handleLogin">
 
-            <button type="submit">Iniciar Sesión</button>
-        </form>
-        <p v-if="errorMessage">{{ errorMessage }}</p>
+                        <div class="text-center">
+                            <img src="../assets/user.png"
+                                class="img-fluid profile-image-pic img-thumbnail rounded-circle my-3" width="200px"
+                                alt="profile">
+                        </div>
+                        <div class="mb-3">
+                            <input type="text" class="form-control" id="nombre" aria-describedby="emailHelp"
+                                placeholder="User Name" v-model="credentials.nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <input type="password" v-model="credentials.clave" required class="form-control"
+                                id="password" placeholder="password">
+                        </div>
+                        <div class="text-center"><button type="submit" class="btn btn-color px-5 mb-5 w-100">Iniciar
+                                Sesión</button></div>
+                        <div id="emailHelp" class="form-text text-center mb-5 text-dark">¿Olvidó su contraseña? <a
+                                href="#" class="text-dark fw-bold"> Clic Aquí</a>
+                        </div>
+                    </form>
+                </div>
+                <p class="alert alert-danger" role="alert" v-if="errorMessage">{{ errorMessage }}</p>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
 import axios from 'axios';
-
 export default {
     name: 'Login',
     data() {
@@ -37,18 +57,11 @@ export default {
                     });
                 if (response.status === 202) {
                     // Guardar el token JWT en localStorage "Bearer " +
-                    localStorage.setItem('authToken',  response.data.jwt);
+                    localStorage.setItem('authToken', response.data.jwt);
                     const token = localStorage.getItem('authToken')
                     console.log(token);
-                    const role = getRoleFromToken(token);
-
-                    // Redirige basado en el rol
-                    if (role === 'ADMIN') {
-                    this.router.push('Dashboard');
-                    } else if (role === 'USER') {
-                    router.push("/");
-                    } else {
-                    this.$router.push("/");
+                    if (token !=null) {
+                        this.$router.push("/");
                     }
                 } else {
                     throw new Error('Error desconocido');
@@ -58,25 +71,28 @@ export default {
                 this.errorMessage = 'Error en el inicio de sesión. Verifique sus credenciales.';
             }
         },
-        
-         getRoleFromToken(token) {
-            const jwt = require('jsonwebtoken');
-                try {
-                    const decodedToken = jwt.decode(token);
-                    return decodedToken.role;
-                } catch (error) {
-                    console.error('Error decoding token:', error);
-                    return null;
-                }
-                }
-        ,
     },
 };
 </script>
 
 <style scoped>
-.login-container {
-    width: 300px;
-    margin: auto;
+.btn-color {
+    background-color: #0e1c36;
+    color: #fff;
+
+}
+
+.profile-image-pic {
+    height: 200px;
+    width: 200px;
+    object-fit: cover;
+}
+
+.cardbody-color {
+    background-color: #ebf2fa;
+}
+
+a {
+    text-decoration: none;
 }
 </style>
