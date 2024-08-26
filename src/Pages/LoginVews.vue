@@ -32,11 +32,18 @@
             </div>
         </div>
     </div>
+    <Footer/>
 </template>
 
 <script>
 import axios from 'axios';
+import Header from '../components/Layout/Header.vue';
+import Footer from '../components/Layout/Footer.vue';
 export default {
+    components: {
+        Footer,
+        Header,
+    },
     name: 'Login',
     data() {
         return {
@@ -61,7 +68,7 @@ export default {
                     const token = localStorage.getItem('authToken')
                     console.log(token);
                     if (token !=null) {
-                        this.$router.push("/");
+                        this.$router.push("/home");
                     }
                 } else {
                     throw new Error('Error desconocido');

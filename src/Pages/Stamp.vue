@@ -14,6 +14,7 @@
                   id="nombreEmpresa"
                   v-model="formData.nombreEmpresa"
                   @input="handleInputChange"
+                  placeholder="Nombre de la empresa"
                 />
               </div>
 
@@ -24,6 +25,7 @@
                   id="folio"
                   v-model="formData.folio"
                   @input="handleInputChange"
+                  placeholder="0"
                 />
               </div>
               <div class="mb-4">
@@ -33,6 +35,7 @@
                   id="anexo"
                   v-model="formData.anexo"
                   @input="handleInputChange"
+                  placeholder="0"
                 />
               </div>
               <div class="mb-4">
@@ -49,14 +52,19 @@
                 
                 <p class="mt-2 text-gray-600">Opción Seleccionada: {{ formData.dependencia }}</p>
               </div>
-
-              <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              <div class="d-flex justify-content-between">
+                <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Imprimir
               </button>
-              <RouterLink
-              to="/"
-              class="bg-blue-500 p-2 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+              <button>
+                <RouterLink
+              to="/home"
+              class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
                 Regresar</RouterLink>
+              </button>
+              
+              </div>
+              
             </form>
           </div>
         </div>
@@ -103,20 +111,16 @@ export default {
   components: {
     Header,
     VSelect,
-    Footer
+    Footer,
   },
   data() {
     return {
       formData: {
-        funcionario: '',
         user: '',
         nombreEmpresa: '',
-        Asunto: '',
-        Descripcion: '',
         folio: 0,
         anexo: 0,
         dependencia: '',
-        tipoUsuario: '',
       },
       tableData: [],
       selectedOption: null,
@@ -160,15 +164,10 @@ export default {
     },
     resetForm() {
       this.formData = {
-        funcionario: '',
-        user: '',
         nombreEmpresa: '',
-        Asunto: '',
-        Descripcion: '',
         folio: '',
         anexo: '',
         dependencia: '',
-        tipoUsuario: '',
       };
       this.selectedOption = null;
       localStorage.removeItem('formData');
@@ -189,6 +188,10 @@ export default {
           console.error("Error fetching dependencies:", error);
         }
       },
+      async generarSelloRadicado(formData,token){
+        let uri = import.meta.env.VITE_URL_BASE;
+        const d = await axios.get(uri+"generar/pdf")
+      }
   }
 };
 </script>

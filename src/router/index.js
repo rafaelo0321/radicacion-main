@@ -10,7 +10,7 @@ import DashboardAdminVews from '../Pages/DashboardAdminVews.vue';
 
 const routes = [
   {
-    path: '/',
+    path: '/home',
     name: 'Home',
     component: Home,
     header: Header,
@@ -31,10 +31,9 @@ const routes = [
     footer: Footer
   },
   {
-    path: '/Login',
+    path: '/',
     name: 'Login',
     component: LoginVews,
-    header: Header,
     footer: Footer
   },
   {
